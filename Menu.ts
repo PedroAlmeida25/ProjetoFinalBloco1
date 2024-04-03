@@ -1,13 +1,31 @@
-import readline = require("readline-sync")
+import readline = require("readline-sync");
+
+import { colors } from "./src/util/color";
+import { ProdutoController } from "./src/controller/ProdutoController";
+import { Ios } from "./src/model/IOS";
+import { Samsung } from "./src/model/Samsung";
+import { Produto } from "./src/model/Produto";
+
 
 export function main() {
 
     let opcao, id, tipo, preco: number;
-    let nome: string;
+    let nome, ios, samsung: string;
+    let tipoProduto = [`IOS`,`Samsung`];
+
+    // Objeto da Classe ProdutoController
+    const produtoController: ProdutoController = new ProdutoController();
+
+    produtoController.cadastrar(new Ios(produtoController.gerarId(),
+        "Iphone 15", 1, 45.00, "Apple"));
+
+    produtoController.cadastrar(new Samsung(produtoController.gerarId(),
+        "Galaxy S24", 2, 60.00, "Samsung"));
 
     while (true) {
 
-        console.log("*****************************************************");
+        console.log(colors.fg.yellowstrong,
+                    "*****************************************************");
         console.log("                                                     ");
         console.log("                    TECHPLUZ                         ");
         console.log("                                                     ");
@@ -22,35 +40,97 @@ export function main() {
         console.log("                                                     ");
         console.log("                                                     ");
         console.log("*****************************************************");
-        console.log("                                                     ");
+        console.log("                                                     ",
+                colors.reset);
 
         console.log("Entre com a opção desejada: ");
         opcao = readline.questionInt("");
 
-        if (opcao == 9) {
-            console.log("\nTECHPLUZ - Conectando você ao futuro, um dispositivo de cada vez!!");
+        if (opcao == 0) {
+            console.log(colors.fg.bluestrong, 
+                        "\nTECHPLUZ - Conectando você ao futuro, um dispositivo de cada vez!!");
             sobre();
+            console.log(colors.reset, "");
             process.exit(0);
         }
 
         switch (opcao) {
             case 1:
-                console.log("\n\nCriar Produto\n\n");
+                console.log(colors.fg.whitestrong, 
+                            "\n\nCriar Produto\n\n", colors.reset);
+                        nome = readline.question("Digite o Nome do Produto: ");
+
+                        tipo = readline.keyInSelect(tipoProduto, "", { cancel: false }) + 1;
+
+                        preco = readline.questionFloat("Digite o preco: ");
+
+                switch (tipo) {
+                    case 1:
+                        ios = readline.question("Digite o Nome Generico do Medicamento: ");
+
+                        produtoController.cadastrar(new Ios(produtoController.gerarId(),
+                            nome, tipo, preco, ios));
+                        break;
+                    case 2:
+                        samsung = readline.question("Digite a frangancia do Cosmetico: ");
+                        produtoController.cadastrar(new Samsung(produtoController.gerarId(),
+                            nome, tipo, preco, samsung));
+                        break;
+                }
+
+                keyPress()
+                break;
                 break;
             case 2:
-                console.log("\n\nListar todos os produtos\n\n");
+                console.log(colors.fg.whitestrong,
+                            "\n\nListar todos os produtos\n\n", colors.reset);
+                            produtoController.listarTodas();
                 break;
             case 3:
-                console.log("\n\nBuscar o produto por Id\n\n");
+                console.log(colors.fg.whitestrong,
+                            "\n\nBuscar o produto por Id\n\n", colors.reset);
+                            id = readline.questionInt("Digite o Id do Produto: ");
+                            produtoController.procurarPorId(id);
                 break;
             case 4:
-                console.log("\nAtualizar dados do produto");
+                console.log(colors.fg.whitestrong,
+                            "\nAtualizar dados do produto", colors.reset);
+                    id = readline.questionInt("Digite o Id do Produto: ");
+                    let produto = produtoController.buscarNoArray(id)
+
+                            if (produto !== null){
+        
+                                nome = readline.question("Digite o Nome do Produto: ");
+        
+                                tipo = produto.tipo;
+                
+                                preco = readline.questionFloat("Digite o preco: ");
+                
+                                switch (tipo) {
+                                    case 1:
+                                        ios = readline.question("Digite o Nome do produto IOS: ");
+                                        produtoController.atualizar(new Ios(id,
+                                            nome, tipo, preco, ios));
+                                        break;
+                                    case 2:
+                                        samsung = readline.question("Digite o nome do produto da Samsung: ");
+                                        produtoController.atualizar(new Samsung(id,
+                                            nome, tipo, preco, samsung));
+                                        break;
+                                }
+        
+                            }else
+                                console.log("Produto não Encontrado!")
+                        keyPress()
                 break;
             case 5:
-                console.log("\nApagar produto");
+                console.log(colors.fg.whitestrong,
+                            "\nApagar produto", colors.reset);
+                    id = readline.questionInt("Digite o Id do Produto: ");
+                    produtoController.deletar(id);
                 break;
             default:
-                console.log("\nOpção Inválida!\n");
+                console.log(colors.fg.whitestrong,"\nOpção Inválida!\n", colors.reset);
                 break;
         }
     }
@@ -65,6 +145,12 @@ export function sobre(): void {
     console.log("Pedro Almeida");
     console.log("                           ");
     console.log("*****************************************************");
+}
+
+function keyPress(): void {
+    console.log(colors.reset, "");
+    console.log("\nPressione enter para continuar...");
+    readline.prompt();
 }
 
 main();
