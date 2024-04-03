@@ -14,7 +14,7 @@ export function main() {
         console.log("*****************************************************");
         console.log("                                                     ");
         console.log("            1 - Criar Produto                        ");
-        console.log("            2 - Listar todas os produtos             ");
+        console.log("            2 - Listar todos os produtos             ");
         console.log("            3 - Buscar produto por Id                ");
         console.log("            4 - Atualizar dados do produto           ");
         console.log("            5 - Apagar produto                       ");
