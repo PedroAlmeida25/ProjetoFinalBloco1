@@ -66,13 +66,13 @@ export function main() {
 
                 switch (tipo) {
                     case 1:
-                        ios = readline.question("Digite o Nome Generico do Medicamento: ");
+                        ios = readline.question("IOS");
 
                         produtoController.cadastrar(new Ios(produtoController.gerarId(),
                             nome, tipo, preco, ios));
                         break;
                     case 2:
-                        samsung = readline.question("Digite a frangancia do Cosmetico: ");
+                        samsung = readline.question("SAMSUNG");
                         produtoController.cadastrar(new Samsung(produtoController.gerarId(),
                             nome, tipo, preco, samsung));
                         break;
